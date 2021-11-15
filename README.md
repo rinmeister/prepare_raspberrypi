@@ -1,1 +1,3 @@
 # prepare_raspberrypi
+
+Het image dat op de RP wordt geinstalleerd heeft een default user ubuntu met ww ubuntu. Daar is expiry op aangezet. Om dit op te vangen in een geautomatiseerd script gebruiken we de expect module  in Ansible om dit ww geautomatiseerd aan te passen. Daarna gebruiken we de “user” module om de pi gebruiker aan te maken. Als laatste plaatsen we de public key voor de pi user in de authorized keys van de RP. Deprivate key hebben we zelf. Nu kunnen we zonder ww in te hoeven voeren aanmelden op de RP. De user pi is lid gemaakt van de groep “adm” en de groep “sudo”. Deze gebruiker moet verder niet interactief gebruikt worden door iemand.
