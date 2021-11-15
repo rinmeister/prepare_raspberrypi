@@ -1,0 +1,31 @@
+---
+
+- name: Playbook to configure standard user and install public key
+  hosts: linux
+  gather_facts: no
+  tasks:
+    - name: "Try first login and change the password"
+      delegate_to: localhost
+      expect:
+        command: sshpass -p {{ ansible_first_login_password }} ssh {{ ansible_ssh_user }}@{{ inventory_hostname }}
+        timeout: 10
+        responses:
+          "Current password:": "{{ ansible_first_login_password }}"
+          "New password:": "{{ ansible_ssh_pass }}"
+          "Retype new password:": "{{ ansible_ssh_pass }}"
+    - name: "create pi user"
+      user:
+        name: "{{ create_user }}"
+        shell: /bin/bash
+        groups: adm,sudo
+        # password crypted using crypt(3): openssl passwd -crypt {{ password }}
+        password: "{{ user_pwd }}"
+        append: yes
+      become: yes
+    - name: "Setup the public key authentication"
+      authorized_key:
+        state: present
+        manage_dir: yes
+        user: "{{ create_user }}"
+        key: "{{ public_key }}"
+      become: yes
