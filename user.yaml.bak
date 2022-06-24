@@ -12,6 +12,18 @@
         timeout: 10
         responses:
           "password:": "{{ ansible_ssh_pass }}"
+    #- name: "Try first login and change the password"
+    #  delegate_to: localhost
+    #  expect:
+    #    # command: sshpass -p {{ ansible_first_login_password }} ssh {{ ansible_ssh_user }}@{{ inventory_hostname }}
+    #    command: ssh {{ ansible_ssh_user }}@{{ inventory_hostname }}
+    #    timeout: 10
+    #    responses:
+    #      "Are you sure you want to continue connecting (yes/no/[fingerprint])?": "yes"
+    #      "ubuntu@10.10.0.18's password:": "{{ ansible_first_login_password }}"
+    #      "Current password:": "{{ ansible_first_login_password }}"
+    #      "New password:": "{{ ansible_ssh_pass }}"
+    #      "Retype new password:": "{{ ansible_ssh_pass }}"
     - name: "create pi user"
       user:
         name: "{{ create_user }}"
@@ -21,7 +33,6 @@
         password: "{{ user_pwd }}"
         append: yes
       become: yes
-      tags: user
     - name: "Setup the public key authentication"
       authorized_key:
         state: present
